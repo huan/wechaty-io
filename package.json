@@ -1,0 +1,47 @@
+{
+  "name": "wechaty-io",
+  "version": "0.0.1",
+  "description": "Wechaty IO Server",
+  "main": "index.ts",
+  "typings": "index.d.ts",
+  "scripts": {
+    "postinstall": "typings install",
+    "start": "ts-node bin/io-server",
+    "test": "ts-node $(which tape) test/*.spec.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zixia/wechaty-io.git"
+  },
+  "keywords": [
+    "wechaty",
+    "io",
+    "server"
+  ],
+  "author": "Zhuohuan LI <zixia@zixia.net>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/zixia/wechaty-io/issues"
+  },
+  "files": [
+    "package.json",
+    "README.md",
+    "CHANGELOG",
+    "LICENSE",
+    "index.ts",
+    "index.d.ts",
+    "src/",
+    "bin/"
+  ],
+  "homepage": "https://github.com/zixia/wechaty-io#readme",
+  "devDependencies": {
+    "tape": "^4.6.0"
+  },
+  "dependencies": {
+    "listag": "^0.2.3",
+    "npmlog": "^4.0.0",
+    "ts-node": "^1.2.1",
+    "typescript": "^2.0.0",
+    "typings": "^1.3.2"
+  }
+}

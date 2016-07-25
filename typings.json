@@ -1,0 +1,12 @@
+{
+  "globalDependencies": {
+    "node": "registry:dt/node"
+    , "ws": "registry:dt/ws#0.0.0+20160405094435"
+  }
+  , "dependencies": {
+    "npmlog": "registry:npm/npmlog#2.0.3+20160429172249"
+  }
+  , "devDependencies": {
+    "tape": "registry:npm/tape#4.0.0+20160723033700"
+  }
+}
