@@ -69,9 +69,9 @@ class IoManager {
     // you might use location.query.access_token to authenticate or share sessions
     // or client.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
 
-    client.on('message', this.onMessage.bind(this, client))
-    client.on('error', this.unRegister.bind(this, client))
-    client.on('close', this.unRegister.bind(this, client))
+    client.onmessage = this.onMessage.bind(this, client)
+    client.onerror = this.unRegister.bind(this, client)
+    client.onclose = this.unRegister.bind(this, client)
 
     // const onlineEvent: IoEvent = {
     //   name: 'online'
