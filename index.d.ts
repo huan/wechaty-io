@@ -1,4 +1,4 @@
-declare module 'wechaty-io' {
+// declare module 'wechaty-io' {
   import * as http from 'http'
 
   interface IoServer {
@@ -7,4 +7,4 @@ declare module 'wechaty-io' {
   }
 
   export const IoServer: IoServer
-}
+// }

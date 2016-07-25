@@ -1,7 +1,8 @@
-import { test } from 'tape'
 import * as http from 'http'
 
-import { IoServer } from '..'
+import { test } from 'tape'
+
+import { IoServer } from '../index.ts'
 
 test('IoServer smoking test', t => {
   const server = http.createServer()
