@@ -1,11 +1,10 @@
 {
   "name": "wechaty-io",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Wechaty IO Server",
   "main": "index.ts",
   "typings": "index.d.ts",
   "scripts": {
-    "zixia": "which ts-node",
     "postinstall": "typings install",
     "start": "ts-node bin/io-server",
     "test": "ts-node $(which tape) test/*.spec.ts"
@@ -31,6 +30,7 @@
     "LICENSE",
     "index.ts",
     "index.d.ts",
+    "typings.json",
     "src/",
     "bin/"
   ],

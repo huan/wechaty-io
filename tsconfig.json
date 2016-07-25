@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "module": "commonjs"
+    "module": "es6"
     , "moduleResolution": "node"
     , "target": "es6"
+    , "declaration": true
   }
   , "files": [
     "typings/index.d.ts"
