@@ -9,6 +9,7 @@
  */
 
 import * as log from 'npmlog'
+import * as WebSocket from 'ws'
 
 import { Listag } from 'listag'
 
@@ -69,9 +70,9 @@ class IoManager {
     // you might use location.query.access_token to authenticate or share sessions
     // or client.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
 
-    client.onmessage = this.onMessage.bind(this, client)
-    client.onerror = this.unRegister.bind(this, client)
-    client.onclose = this.unRegister.bind(this, client)
+    client.on('message', this.onMessage.bind(this, client))
+    client.on('error', this.unRegister.bind(this, client))
+    client.on('close', this.unRegister.bind(this, client))
 
     // const onlineEvent: IoEvent = {
     //   name: 'online'
@@ -102,19 +103,19 @@ class IoManager {
     // this.castBy(client, offlineEvent)
   }
 
-  onMessage(client: WebSocket, message) {
-    log.verbose('IoManager', 'onMessage() received: %s', message)
+  onMessage(client: WebSocket, data: any) {
+    log.verbose('IoManager', 'onMessage() received: %s', data)
 
     let ioEvent: IoEvent = {
       name: 'raw'
-      , payload: message
+      , payload: data
     }
     try {
-      const obj = JSON.parse(message)
+      const obj = JSON.parse(data)
       ioEvent.name    = obj.name
       ioEvent.payload = obj.payload
     } catch (e) {
-      log.warn('IoManager', 'onMessage() parse message fail. orig message: [%s]', message)
+      log.warn('IoManager', 'onMessage() parse data fail. orig data: [%s]', data)
     }
     this.castBy(client, ioEvent)
 

@@ -2,7 +2,7 @@ import * as http from 'http'
 
 import { test } from 'tape'
 
-import { IoServer } from '../index.ts'
+import { IoServer } from '../src/io-server'
 
 test('IoServer smoking test', t => {
   const server = http.createServer()

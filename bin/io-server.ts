@@ -7,7 +7,7 @@ import * as http from 'http'
 
 import log = require('npmlog') // https://github.com/Microsoft/TypeScript/issues/6751
 // log.level = 'verbose'
-// log.level = 'silly'
+log.level = 'silly'
 
 import { IoServer } from '..'
 
