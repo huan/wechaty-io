@@ -9,7 +9,12 @@
  */
 
 import * as http  from 'http'
-import * as log   from 'npmlog'
+
+import log = require('npmlog')
+if (process.env.WECHATY_LOG) {
+  log.level = String(process.env.WECHATY_LOG).toLowerCase()
+  log.verbose('IoServer', 'Npmlog set log.level =', log.level, 'from env.WECHATY_LOG')
+}
 
 import { IoAuth }     from './io-auth'
 import { IoManager }  from './io-manager'
