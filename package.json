@@ -1,7 +1,7 @@
 {
   "name": "wechaty-io",
-  "version": "0.0.2",
-  "description": "Wechaty IO Server",
+  "version": "0.0.3",
+  "description": "Wechaty IO Server write in Pure TypeScript",
   "main": "index.ts",
   "typings": "index.d.ts",
   "scripts": {
