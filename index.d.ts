@@ -1,3 +1,7 @@
+/**
+ * do not use `module` here?
+ * http://stackoverflow.com/a/32805764/1123955
+ */
 // declare module 'wechaty-io' {
   import * as http from 'http'
 
