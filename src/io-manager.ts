@@ -128,45 +128,43 @@ class IoManager {
 
   send(client: WebSocket, ioEvent: IoEvent) {
     const clientInfo = <ClientInfo>client['clientInfo']
-    log.verbose('IoManager', 'send() token[%s], event[%s:%s])'
+    log.verbose('IoManager', 'send() to token[%s@%s], event[%s:%s]'
                           , clientInfo.token
-                        , ioEvent.name
-                      , ioEvent.payload
+                          , clientInfo.protocol
+                          , ioEvent.name
+                          , ioEvent.payload
                )
     return client.send(JSON.stringify(ioEvent))
   }
 
   castBy(client: WebSocket, ioEvent: IoEvent): void {
-    log.verbose('IoManager', 'castBy()')
+    // log.verbose('IoManager', 'castBy()')
 
     const clientInfo = <ClientInfo>client['clientInfo']
     log.verbose('IoManager', 'castBy() token[%s] protocol[%s]', clientInfo.token, clientInfo.protocol)
+
+    log.verbose('IoManager', 'castBy() total online connections: %d, detail below:', this.ltSocks.length)
+    this.ltSocks.forEach(v => {
+      let tagMapTmp = this.ltSocks.getTag(v)
+      log.verbose('IoManager', 'castBy() connections item tagMap: %s', JSON.stringify(tagMapTmp))
+    })
 
     const tagMap = {
       protocol: '-' + clientInfo.protocol
       , token:  clientInfo.token
     }
-
     const socks = this.ltSocks.get(tagMap)
 
-    log.verbose('IoManager', 'castBy() tagMap: %s', JSON.stringify(tagMap))
-    log.verbose('IoManager', 'castBy() ltSocks length: %d', (this.ltSocks && this.ltSocks.length))
-    log.verbose('IoManager', 'castBy() filtered socks length: %d', (socks && socks.length))
-
-    this.ltSocks.forEach(v => {
-      // console.log('user: ' + v.user)
-      let tagMapTmp = this.ltSocks.getTag(v)
-      log.verbose('IoManager', 'castBy() tagMapTmp: %s', JSON.stringify(tagMapTmp))
-    })
+    log.verbose('IoManager', 'castBy() filter by tagMap: %s', JSON.stringify(tagMap))
+    log.verbose('IoManager', 'castBy() filtered # of connections: %d', (socks && socks.length))
 
     if (socks) {
-      log.verbose('IoManager', 'castBy() found %d socks', socks.length)
       socks.forEach(s => {
         if (s.readyState === WebSocket.OPEN) {
           log.verbose('IoManager', 'castBy() sending to sock now')
-          this.send(s, ioEvent) // s.send(fromLocation + '[' + user + ']: ' + message)
+          this.send(s, ioEvent)
         } else {
-          log.verbose('IoManager', 'castBy() skipped an non-OPEN WebSocket')
+          log.warn('IoManager', 'castBy() skipped an non-OPEN WebSocket')
         }
       })
     }
