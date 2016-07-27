@@ -104,6 +104,7 @@ class IoManager {
   }
 
   onMessage(client: WebSocket, data: any) {
+    log.verbose('IoManager', '_____________________________________________')
     log.verbose('IoManager', 'onMessage() received: %s', data)
 
     let ioEvent: IoEvent = {
@@ -144,10 +145,10 @@ class IoManager {
     log.verbose('IoManager', 'castBy() token[%s] protocol[%s]', clientInfo.token, clientInfo.protocol)
 
     log.verbose('IoManager', 'castBy() total online connections: %d, detail below:', this.ltSocks.length)
-    this.ltSocks.forEach(v => {
-      let tagMapTmp = this.ltSocks.getTag(v)
-      log.verbose('IoManager', 'castBy() connections item tagMap: %s', JSON.stringify(tagMapTmp))
-    })
+    for (let n=0; n<this.ltSocks.length; n++) {
+      let tagMapTmp = this.ltSocks.getTag(this.ltSocks[n])
+      log.verbose('IoManager', 'castBy() connections#%d: %s', n, JSON.stringify(tagMapTmp))
+    }
 
     const tagMap = {
       protocol: '-' + clientInfo.protocol
