@@ -30,7 +30,7 @@ class IoServer {
     this.ioSocket = new IoSocket(
       server
       , this.ioAuth.auth.bind(this.ioAuth)
-      , this.ioManager.register.bind(this.ioManager)
+      , this.ioManager.register.bind(this.ioManager)  // this will hook unRegister well
     )
   }
 

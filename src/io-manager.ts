@@ -61,6 +61,8 @@ class IoManager {
                             , clientInfo.version
               )
 
+    log.info('IoManager', 'register() token online: %s', clientInfo.token)
+
     this.ltSocks.add(client, {
       protocol: clientInfo.protocol
       , token:  clientInfo.token
@@ -71,14 +73,25 @@ class IoManager {
     // or client.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
 
     client.on('message', this.onMessage.bind(this, client))
-    client.on('error', this.unRegister.bind(this, client))
-    client.on('close', this.unRegister.bind(this, client))
+    client.on('close', this.unregister.bind(this, client))
 
-    // const onlineEvent: IoEvent = {
-    //   name: 'online'
-    //   , payload: 'protocol'
-    // }
-    // this.castBy(client, regEvent)
+    // close will be called on every socket. 
+    // on error need not unregister again.
+    client.on('error', e => {
+      log.warn('IoManager', 'client.on(error) %s', e)
+      const tagMap = this.ltSocks.getTag(client)
+      if (tagMap) {
+        log.warn('IoManager', 'error client is not removed from ltSocks yet?!')
+      } else {
+        log.verbose('IoManager', 'error client is already removed from ltSocks')
+      }
+    })
+
+    const onlineEvent: IoEvent = {
+      name: 'online'
+      , payload: clientInfo.protocol
+    }
+    this.castBy(client, onlineEvent)
 
     const registerEvent: IoEvent = {
       name: 'sys'
@@ -90,17 +103,20 @@ class IoManager {
   }
 
 
-  unRegister(client: WebSocket, e: any ) {
-    log.verbose('IoManager', 'unregister(%s)', e)
+  unregister(client: WebSocket, code: number, reason: string) {
+    log.verbose('IoManager', 'unregister(%d: %s)', code, reason)
+
+    const tagMap = this.ltSocks.getTag(client)
+    log.info('IoManager', 'unregister() token offline: %s', tagMap.token)
 
     this.ltSocks.del(client)
     client.close()
 
-    // const offlineEvent: IoEvent = {
-    //   name: 'offline'
-    //   , payload: 'protocol'
-    // }
-    // this.castBy(client, offlineEvent)
+    const offlineEvent: IoEvent = {
+      name: 'offline'
+      , payload: tagMap.protocol
+    }
+    this.castBy(client, offlineEvent)
   }
 
   onMessage(client: WebSocket, data: any) {
