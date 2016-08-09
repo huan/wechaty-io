@@ -17,6 +17,7 @@ interface ClientInfo {
   token: string
   protocol: IoProtocol
   version: string
+  uuid: string
 }
 
 class IoSocket {
@@ -43,13 +44,14 @@ class IoSocket {
     }
     this.wss = new WebSocket.Server(options)
     this.wss.on('connection', client => {
-      const [protocol, version] = client.protocol.split('|')
+      const [protocol, version, uuid] = client.protocol.split('|')
       const token = client.upgradeReq['token']
 
       const clientInfo: ClientInfo = {
         protocol: <IoProtocol>protocol
         , token
         , version
+        , uuid
       }
       client['clientInfo'] = clientInfo
       this.connect(client)

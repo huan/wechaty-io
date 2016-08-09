@@ -55,10 +55,11 @@ class IoManager {
     // upgradeReq.socket/connection/client
 
     const clientInfo = <ClientInfo>client['clientInfo']
-    log.verbose('IoManager', 'register token[%s] protocol[%s] version[%s]'
+    log.verbose('IoManager', 'register token[%s] protocol[%s] version[%s] uuid[%s]'
                             , clientInfo.token
                             , clientInfo.protocol
                             , clientInfo.version
+                            , clientInfo.uuid
               )
 
     log.info('IoManager', 'register() token online: %s', clientInfo.token)
@@ -66,6 +67,7 @@ class IoManager {
     this.ltSocks.add(client, {
       protocol: clientInfo.protocol
       , token:  clientInfo.token
+      , uuid:   clientInfo.uuid
     })
 
     // var location = url.parse(client.upgradeReq.url, true);
@@ -79,7 +81,7 @@ class IoManager {
     // on error need not unregister again.
     client.on('error', e => {
       log.warn('IoManager', 'client.on(error) %s', e)
-      const tagMap = this.ltSocks.getTag(client)
+      const tagMap = this.ltSocks.item(client).tag()
       if (tagMap) {
         log.warn('IoManager', 'error client is not removed from ltSocks yet?!')
       } else {
@@ -106,7 +108,7 @@ class IoManager {
   unregister(client: WebSocket, code: number, reason: string) {
     log.verbose('IoManager', 'unregister(%d: %s)', code, reason)
 
-    const tagMap = this.ltSocks.getTag(client)
+    const tagMap = this.ltSocks.item(client).tag()
     log.info('IoManager', 'unregister() token offline: %s', tagMap.token)
 
     this.ltSocks.del(client)
@@ -122,6 +124,13 @@ class IoManager {
   onMessage(client: WebSocket, data: any) {
     log.verbose('IoManager', '_____________________________________________')
     log.verbose('IoManager', 'onMessage() received: %s', data)
+
+    let item = this.ltSocks.item(client)
+    if (item) {
+        item.tag({ ts: Date.now() })
+    } else {
+      log.warn('IoManager', 'listag get client null')
+    }
 
     let ioEvent: IoEvent = {
       name: 'raw'
@@ -157,12 +166,16 @@ class IoManager {
   castBy(client: WebSocket, ioEvent: IoEvent): void {
     // log.verbose('IoManager', 'castBy()')
 
+    const ltSocks = this.ltSocks
+
     const clientInfo = <ClientInfo>client['clientInfo']
     log.verbose('IoManager', 'castBy() token[%s] protocol[%s]', clientInfo.token, clientInfo.protocol)
 
     log.verbose('IoManager', 'castBy() total online connections: %d, detail below:', this.ltSocks.length)
     for (let n=0; n<this.ltSocks.length; n++) {
-      let tagMapTmp = this.ltSocks.getTag(this.ltSocks[n])
+      let tagMapTmp = this.ltSocks
+                          .item(this.ltSocks[n])
+                          .tag()
       log.verbose('IoManager', 'castBy() connections#%d: %s', n, JSON.stringify(tagMapTmp))
     }
 
