@@ -105,7 +105,7 @@ class IoManager {
 
   onMessage(client: WebSocket, data: any) {
     log.verbose('IoManager', '_____________________________________________')
-    log.verbose('IoManager', 'onMessage() received: %s', data)
+    log.verbose('IoManager', '⇑ onMessage() received: %s', data)
 
     let ioEvent: IoEvent = {
       name: 'raw'
@@ -129,7 +129,7 @@ class IoManager {
 
   send(client: WebSocket, ioEvent: IoEvent) {
     const clientInfo = <ClientInfo>client['clientInfo']
-    log.verbose('IoManager', 'send() to token[%s@%s], event[%s:%s]'
+    log.verbose('IoManager', '⇓ send() to token[%s@%s], event[%s:%s]'
                           , clientInfo.token
                           , clientInfo.protocol
                           , ioEvent.name
