@@ -8,8 +8,9 @@
  * 
  */
 
-import * as log from 'npmlog'
+import * as log       from 'npmlog'
 import * as WebSocket from 'ws'
+import * as moment    from 'moment'
 
 import { Listag } from 'listag'
 
@@ -62,7 +63,7 @@ class IoManager {
                             , clientInfo.uuid
               )
 
-    log.info('IoManager', 'register() token online: %s', clientInfo.token)
+    log.info('IoManager', '◉ register() token online: %s', clientInfo.token)
 
     this.ltSocks.add(client, {
       protocol: clientInfo.protocol
@@ -80,7 +81,7 @@ class IoManager {
     // close will be called on every socket. 
     // on error need not unregister again.
     client.on('error', e => {
-      log.warn('IoManager', 'client.on(error) %s', e)
+      log.warn('IoManager', '‼ client.on(error) %s', e)
       const tagMap = this.ltSocks.item(client).tag()
       if (tagMap) {
         log.warn('IoManager', 'error client is not removed from ltSocks yet?!')
@@ -106,7 +107,7 @@ class IoManager {
 
 
   unregister(client: WebSocket, code: number, reason: string) {
-    log.verbose('IoManager', 'unregister(%d: %s)', code, reason)
+    log.verbose('IoManager', '∅ unregister(%d: %s)', code, reason)
 
     const tagMap = this.ltSocks.item(client).tag()
     log.info('IoManager', 'unregister() token offline: %s', tagMap.token)
@@ -176,6 +177,8 @@ class IoManager {
       let tagMapTmp = this.ltSocks
                           .item(this.ltSocks[n])
                           .tag()
+      tagMapTmp.ts = moment.duration(tagMapTmp.ts - Date.now()).humanize(true)
+
       log.verbose('IoManager', 'castBy() connections#%d: %s', n, JSON.stringify(tagMapTmp))
     }
 
