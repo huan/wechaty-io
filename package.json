@@ -37,7 +37,7 @@
   ],
   "homepage": "https://github.com/zixia/wechaty-io#readme",
   "devDependencies": {
-    "tape": "^4.6.0",
+    "tape": "^4.6.2",
     "typings": "^1.4.0"
   },
   "dependencies": {
