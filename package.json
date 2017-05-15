@@ -1,6 +1,6 @@
 {
   "name": "wechaty-io",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Wechaty IO Server",
   "main": "index.ts",
   "typings": "index.d.ts",
