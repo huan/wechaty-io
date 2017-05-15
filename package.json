@@ -1,25 +1,24 @@
 {
   "name": "wechaty-io",
   "version": "0.0.3",
-  "description": "Wechaty IO Server write in Pure TypeScript",
+  "description": "Wechaty IO Server",
   "main": "index.ts",
   "typings": "index.d.ts",
   "scripts": {
-    "postinstall": "typings install",
-    "start": "purets bin/io-server",
-    "dev": "typings install",
-    "test": "purets $(which tape) test/*.spec.ts"
+    "start": "ts-node bin/io-server",
+    "test": "tap test/**/*.spec.ts"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zixia/wechaty-io.git"
   },
   "keywords": [
+    "chatie",
     "wechaty",
     "io",
     "server"
   ],
-  "author": "Zhuohuan LI <zixia@zixia.net>",
+  "author": "Huan LI <zixia@zixia.net>",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/zixia/wechaty-io/issues"
@@ -37,14 +36,16 @@
   ],
   "homepage": "https://github.com/zixia/wechaty-io#readme",
   "devDependencies": {
-    "tape": "^4.6.3",
-    "typings": "^2.0.0"
+    "@types/node": "^7.0.18",
+    "@types/ws": "0.0.41",
+    "tap": "^10.3.2",
+    "ts-node": "^3.0.4",
+    "typescript": "^2.3.2"
   },
   "dependencies": {
+    "brolog": "^1.1.18",
     "listag": "^0.3.1",
     "moment": "^2.17.1",
-    "npmlog": "^4.0.2",
-    "pure-typescript": "0.0.1",
     "ws": "^2.3.0"
   }
 }

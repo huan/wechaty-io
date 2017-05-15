@@ -1,28 +1,27 @@
 /**
- * 
+ *
  * Wechaty Io Server Class
- * 
+ *
  * IoManager
- * 
+ *
  * https://github.com/zixia/wechaty
- * 
+ *
  */
 
-import * as log       from 'npmlog'
-import * as WebSocket from 'ws'
+import { log }        from 'brolog'
+import { Listag }     from 'listag'
 import * as moment    from 'moment'
-
-import { Listag } from 'listag'
+import * as WebSocket from 'ws'
 
 import { ClientInfo } from './io-socket'
 
-type ServerEventName = 
-	'sys'
-//   | 'online'
-//   | 'offline'
+export type ServerEventName =
+	  'sys'
+  | 'online'
+  | 'offline'
 
-type WechatyEventName = 
-  'scan'
+export type WechatyEventName =
+    'scan'
   | 'login'
   | 'logout'
   | 'message'
@@ -31,12 +30,12 @@ type WechatyEventName =
   | 'ding'
   | 'dong'
 
-type EventName =
-  'raw'
+export type EventName =
+    'raw'
   | ServerEventName
   | WechatyEventName
 
-interface IoEvent {
+export interface IoEvent {
   name: EventName
   payload: string | Object
 }
@@ -78,7 +77,7 @@ class IoManager {
     client.on('message', this.onMessage.bind(this, client))
     client.on('close', this.unregister.bind(this, client))
 
-    // close will be called on every socket. 
+    // close will be called on every socket.
     // on error need not unregister again.
     client.on('error', e => {
       log.warn('IoManager', '‼ client.on(error) %s', e)

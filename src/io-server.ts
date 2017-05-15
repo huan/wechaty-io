@@ -1,43 +1,44 @@
 /**
- * 
+ *
  * Wechaty Io Server Class
- * 
+ *
  * IoAuth
- * 
+ *
  * https://github.com/zixia/wechaty
- * 
+ *
  */
 
 import * as http  from 'http'
 
-import log = require('npmlog')
+import { log } from 'brolog'
 if (process.env.WECHATY_LOG) {
-  log.level = String(process.env.WECHATY_LOG).toLowerCase()
-  log.verbose('IoServer', 'Npmlog set log.level =', log.level, 'from env.WECHATY_LOG')
+  log.level(process.env.WECHATY_LOG)
+  log.verbose('IoServer', 'Npmlog set log.level(%s) from env.WECHATY_LOG', log.level())
 }
 
 import { IoAuth }     from './io-auth'
 import { IoManager }  from './io-manager'
 import { IoSocket }   from './io-socket'
 
-class IoServer {
+export class IoServer {
   ioManager = new IoManager()
   ioAuth = new IoAuth()
 
   ioSocket: IoSocket
 
-  constructor(private server: http.Server) {
+  constructor(
+    private server: http.Server
+  ) {
     this.ioSocket = new IoSocket(
-      server
-      , this.ioAuth.auth.bind(this.ioAuth)
-      , this.ioManager.register.bind(this.ioManager)  // this will hook unRegister well
+      server,
+      this.ioAuth.auth.bind(this.ioAuth),
+      // this will hook unRegister well
+      this.ioManager.register.bind(this.ioManager),
     )
   }
 
-  init() {
-    this.ioSocket.init()
-    return Promise.resolve(this)
+  async init() {
+    await this.ioSocket.init()
+    return this
   }
 }
-
-export { IoServer }

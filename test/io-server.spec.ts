@@ -1,6 +1,8 @@
+#!/usr/bin/env ts-node
+
 import * as http from 'http'
 
-import { test } from 'tape'
+import * as test from 'tap'
 
 import { IoServer } from '../src/io-server'
 

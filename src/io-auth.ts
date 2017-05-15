@@ -1,14 +1,14 @@
 /**
- * 
+ *
  * Wechaty Io Server Class
- * 
+ *
  * IoAuth
- * 
+ *
  * https://github.com/zixia/wechaty
- * 
+ *
  */
 import * as http from 'http'
-import * as log from 'npmlog'
+import { log } from 'brolog'
 
 class IoAuth {
   constructor() {
@@ -33,16 +33,17 @@ class IoAuth {
     log.verbose('IoAuth', 'getToken()')
     const token = authToken(req.headers.authorization)
                || urlToken(req.url)
+
     return token
 
     /////////////////////////
 
-    function urlToken(url) {
+    function urlToken(url: string): string | null {
       const matches = String(url).match(/token\/(.+)$/i)
-      return matches && matches[1]
+      return matches && matches[1] || null
     }
 
-    function authToken(authorization) {
+    function authToken(authorization: string): string | null {
       // https://github.com/KevinPHughes/ws-basic-auth-express/blob/master/index.js
       if (!authorization) {
         log.verbose('IoAuth', 'authToken() no authorization')
@@ -60,7 +61,7 @@ class IoAuth {
         return null
       }
       return token
-    }    
+    }
   }
 }
 

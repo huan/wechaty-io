@@ -1,44 +1,44 @@
 /**
- * 
+ *
  * Wechaty Io Server Class
- * 
+ *
  * IoSocket
- * 
+ *
  * https://github.com/zixia/wechaty
- * 
+ *
  */
 import * as WebSocket from 'ws'
 import * as http from 'http'
-import * as log from 'npmlog'
+import { log } from 'brolog'
 
-type IoProtocol = 'io' | 'web'
+export type IoProtocol = 'io' | 'web'
 
 interface ClientInfo {
-  token: string
+  token:    string
   protocol: IoProtocol
-  version: string
-  uuid: string
+  version:  string
+  uuid:     string
 }
 
 class IoSocket {
   wss: WebSocket.Server
 
   constructor(
-    private server: http.Server
-    , private auth: (req: http.ServerRequest) => Promise<string>
-    , private connect: (client: WebSocket) => void 
+    private server: http.Server,
+    private auth: (req: http.ServerRequest) => Promise<string>,
+    private connect: (client: WebSocket) => void,
   ) {
     log.verbose('IoSocket', 'constructor()')
   }
 
-  init(): Promise<IoSocket> {
+  async init(): Promise<void> {
     log.verbose('IoSocket', 'init()')
 
     // https://github.com/websockets/ws/blob/master/doc/ws.md
     const options = {
-      handleProtocols: this.handleProtocols.bind(this)
-      , verifyClient: this.verifyClient.bind(this)
-      , server: this.server
+      handleProtocols:  this.handleProtocols.bind(this),
+      verifyClient:     this.verifyClient.bind(this),
+      server:           this.server,
       // , host: process.env.IP
       // , port: process.env.PORT
     }
@@ -48,16 +48,16 @@ class IoSocket {
       const token = client.upgradeReq['token']
 
       const clientInfo: ClientInfo = {
-        protocol: <IoProtocol>protocol
-        , token
-        , version
-        , uuid
+        protocol: <IoProtocol>protocol,
+        token,
+        version,
+        uuid,
       }
       client['clientInfo'] = clientInfo
       this.connect(client)
     })
 
-    return Promise.resolve(this)
+    return
   }
 
   /**
@@ -72,33 +72,33 @@ class IoSocket {
    * check token for websocket client
    * http://stackoverflow.com/a/19155613/1123955
    */
-  private verifyClient(
+  private async verifyClient(
     info: {
-      origin: string
-      secure: boolean
-      req: http.ServerRequest
-    }
-    , done: (res: boolean, code?: number, message?: string) => void
-  ): void {
+      origin: string,
+      secure: boolean,
+      req: http.ServerRequest,
+    },
+    done: (res: boolean, code?: number, message?: string) => void
+  ): Promise<void> {
     log.verbose('IoSocket', 'verifyClient()')
 
     const {origin, secure, req} = info
     log.verbose('IoSocket', 'verifyClient() req.url = %s', req.url)
 
-    this.auth(req)
-        .then(token => {
-          log.verbose('IoSocket', 'verifyClient() auth succ for token: %s', token)
+    try {
+      const token = await this.auth(req)
+      log.verbose('IoSocket', 'verifyClient() auth succ for token: %s', token)
 
-          req['token'] = token
-          return done(true, 200, 'Ok')
+      req['token'] = token
 
-        })
-        .catch(e => {
-          log.verbose('IoSocket', 'verifyClient() auth fail: %s', e.message)
+      return done(true, 200, 'Ok')
 
-          return done(false, 401, 'Unauthorized: ' + e.message)
+    } catch (e) {
+      log.verbose('IoSocket', 'verifyClient() auth fail: %s', e.message)
 
-        })
+      return done(false, 401, 'Unauthorized: ' + e.message)
+
+    }
   }
 }
 
