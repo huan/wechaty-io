@@ -6,23 +6,26 @@
 import * as http from 'http'
 
 import log from 'brolog'
-// log.level = 'verbose'
-log.level('silly')
 
-import { IoServer } from '..'
+import { IoServer } from '../'
 
-const server = http.createServer()
-const port = process.env.PORT || 8080 // process.env.PORT is set by Heroku/Cloud9
+async function main(): Promise<void> {
+  log.level('silly')
 
-server.listen(port, _ => {
-  log.info('io-server', 'Listening on ' + server.address().port)
-})
+  const server  = http.createServer()
+  const port    = process.env.PORT as number || 8080 // process.env.PORT is set by Heroku/Cloud9
 
-const ioServer = new IoServer(server)
-ioServer.init()
-.then(_ => {
-  log.info('io-server', 'init succeed')
-})
-.catch(e => {
-  log.error('io-server', 'init failed')
-})
+  server.listen(port, _ => log.info('io-server', 'Listening on ' + server.address().port))
+
+  const ioServer = new IoServer(server)
+  try {
+    await ioServer.init()
+    log.info('io-server', 'init succeed')
+  } catch(e) {
+    log.error('io-server', 'init failed: %s', e.message)
+    throw e
+  }
+  return
+}
+
+main()
