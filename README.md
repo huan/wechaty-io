@@ -7,7 +7,7 @@ Wechaty IO Server
 
 IO Server is a cloud service component for [Wechaty](https://github.com/zixia/wechaty)
 
-[![npm version](https://badge.fury.io/js/wechaty-io.svg)](https://badge.fury.io/js/wechaty-io)
+[![npm version](https://badge.fury.io/js/wechaty-io.svg)](https://badge.fury.io/js/wechaty-io) [![Greenkeeper badge](https://badges.greenkeeper.io/zixia/wechaty-io.svg)](https://greenkeeper.io/)
 
 ## Reference
 
